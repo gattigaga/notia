@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tool renders correctly 1`] = `
+<styled.div
+  onClick={[Function]}
+>
+  <Styled(Icon)
+    name="list"
+  />
+  <Styled(Tooltip)
+    text="New List"
+  />
+</styled.div>
+`;

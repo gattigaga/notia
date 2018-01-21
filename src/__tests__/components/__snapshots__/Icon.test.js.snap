@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon renders correctly 1`] = `
+<i
+  className="material-icons "
+>
+  list
+</i>
+`;
+
+exports[`Icon renders with additional class 1`] = `
+<i
+  className="material-icons my-class"
+>
+  list
+</i>
+`;

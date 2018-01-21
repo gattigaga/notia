@@ -14,10 +14,7 @@
     "typeface-roboto": "^0.0.50"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx}": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
+    "src/**/*.{js,jsx}": ["prettier --double-quote --write", "git add"]
   },
   "scripts": {
     "precommit": "lint-staged",

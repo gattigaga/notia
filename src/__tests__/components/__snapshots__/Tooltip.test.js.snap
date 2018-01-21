@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tooltip renders correctly 1`] = `
+<styled.div>
+  <styled.span>
+    New List
+  </styled.span>
+</styled.div>
+`;
