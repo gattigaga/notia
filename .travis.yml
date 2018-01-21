@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- stable
+cache:
+  directories:
+  - node_modules
+script:
+- npm test
+- npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: "$github_token"
+  local_dir: build
+  on:
+    branch: master
+notifications:
+  slack:
+    secure: IiCmmfWl7R8L/KtTinoYAHfzKevm5gRDAZQWvQBFrbaFXHQKMCSk8V6UkZWMZt+rBWG3IxJLM3Ss6B5bxUTOUos1AE8xg114MeB1QJ0219RnF3Y9EBEVMZi/k2c/+dTzPSdzHFvNaNtUyWtiKdw9Mr8Qzv+G0BzJ5Q+QK2OK/w1gp5yNoRebAUw/68wEQZROILTYcIBFSfkxjaPC7V43ndIrBX6vWWAWQ/i4YYaGv5FKh5izNoYIrKz+B8//a6CZyF9GVL1o8feu2/NHXpSD1OfazXArkJhoq33ktmHlYnRoFVHnVp3aUejUpEZgBamnQlNj47bh3eV85RoNTuBgqUdRwnAV4p2kRlRxkH+5uI17nQ3/Ss/sxkhpTvpOXJ6MeGPmh8Y0vY6QjDlSKt+jq7Lnh5ax/CEs8sWxdP8gQPn8SEvkMAbU8SpWRimIZSNwZE0R6vdSpIAxjP7cSvM5lU9ENdaDxbomskC2x5JeXb2A/5YpCXXz51H61FyDq563QhdkjhsrBNQAHUmTxaycw/SqSLqKTHm/klarVEoZmvj/9hqE9hs/FPGr0Pzxc3rX5fUtGCCtm9w38hs7tur6LJjmZb4h7sEJh96uSOrZI+xwRTHchkglyZwo04dld7gl5hO+IZcer24b1yEy0JRnoDLEQ/mWdSa4fAK7uIyFMGk=
