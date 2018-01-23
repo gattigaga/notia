@@ -18,6 +18,9 @@ const TextContainer = styled.div`
   align-items: center;
 `;
 
+// For testing purpose
+TextContainer.displayName = "TextContainer";
+
 const Text = styled.span`
   font-style: italic;
   font-size: 14px;
@@ -28,8 +31,8 @@ const Text = styled.span`
 `;
 
 const InsertBox = ({ children, onClick }) => (
-  <Container onClick={onClick}>
-    <TextContainer>
+  <Container>
+    <TextContainer onClick={onClick}>
       <Text>What do you think ?</Text>
     </TextContainer>
     {children}

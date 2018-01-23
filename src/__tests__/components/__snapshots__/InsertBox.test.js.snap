@@ -1,25 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Icon renders correctly 1`] = `
-<styled.div
-  onClick={[Function]}
->
-  <styled.div>
-    <styled.span>
-      What do you think ?
-    </styled.span>
-  </styled.div>
-</styled.div>
-`;
-
 exports[`InsertBox renders correctly 1`] = `
-<styled.div
-  onClick={[Function]}
->
-  <styled.div>
+<styled.div>
+  <TextContainer
+    onClick={[Function]}
+  >
     <styled.span>
       What do you think ?
     </styled.span>
-  </styled.div>
+  </TextContainer>
 </styled.div>
 `;

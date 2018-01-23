@@ -22,7 +22,7 @@ describe("InsertBox", () => {
 
   it("calls 'onClick'", () => {
     expect(onClick.mock.calls.length).toEqual(0);
-    wrapper.simulate("click");
+    wrapper.find("TextContainer").simulate("click");
     expect(onClick.mock.calls.length).toEqual(1);
   });
 });
