@@ -3,6 +3,7 @@
 exports[`Icon renders correctly 1`] = `
 <i
   className="material-icons "
+  onClick={[Function]}
 >
   list
 </i>
@@ -11,6 +12,7 @@ exports[`Icon renders correctly 1`] = `
 exports[`Icon renders with additional class 1`] = `
 <i
   className="material-icons my-class"
+  onClick={[Function]}
 >
   list
 </i>

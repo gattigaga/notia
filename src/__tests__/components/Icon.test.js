@@ -4,10 +4,11 @@ import toJSON from "enzyme-to-json";
 
 import Icon from "components/Icon";
 
-let wrapper;
+let wrapper, onClick;
 
 beforeEach(() => {
-  wrapper = shallow(<Icon name="list" />);
+  onClick = jest.fn();
+  wrapper = shallow(<Icon name="list" onClick={onClick} />);
 });
 
 describe("Icon", () => {
@@ -18,5 +19,11 @@ describe("Icon", () => {
   it("renders with additional class", () => {
     wrapper.setProps({ className: "my-class" });
     expect(toJSON(wrapper)).toMatchSnapshot();
+  });
+
+  it("calls onClick", () => {
+    expect(onClick.mock.calls.length).toEqual(0);
+    wrapper.simulate("click");
+    expect(onClick.mock.calls.length).toEqual(1);
   });
 });
