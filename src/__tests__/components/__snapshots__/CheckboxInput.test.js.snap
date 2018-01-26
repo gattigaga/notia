@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxInput renders as blank new item 1`] = `
+<styled.div>
+  <Styled(Icon)
+    name="add"
+  />
+  <Label
+    innerRef={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyPress={[Function]}
+    placeholder="List Item"
+    rows={1}
+    value="Learning React"
+  />
+</styled.div>
+`;
+
+exports[`CheckboxInput renders as checked 1`] = `
+<styled.div>
+  <Check
+    checked={true}
+    onChange={[Function]}
+    type="checkbox"
+  />
+  <Label
+    innerRef={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyPress={[Function]}
+    placeholder="List Item"
+    rows={1}
+    value="Learning React"
+  />
+</styled.div>
+`;
+
+exports[`CheckboxInput renders as focused 1`] = `
+<styled.div>
+  <Check
+    onChange={[Function]}
+    type="checkbox"
+  />
+  <Label
+    innerRef={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyPress={[Function]}
+    placeholder="List Item"
+    rows={1}
+    value="Learning React"
+  />
+</styled.div>
+`;
+
+exports[`CheckboxInput renders correctly 1`] = `
+<styled.div>
+  <Check
+    onChange={[Function]}
+    type="checkbox"
+  />
+  <Label
+    innerRef={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyPress={[Function]}
+    placeholder="List Item"
+    rows={1}
+    value="Learning React"
+  />
+</styled.div>
+`;
+
+exports[`CheckboxInput renders with custom label 1`] = `
+<styled.div>
+  <Check
+    onChange={[Function]}
+    type="checkbox"
+  />
+  <Label
+    innerRef={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyPress={[Function]}
+    placeholder="List Item"
+    rows={1}
+    value="Learning Redux"
+  />
+</styled.div>
+`;
