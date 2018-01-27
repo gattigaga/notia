@@ -57,13 +57,20 @@ const Button = styled.button`
 Button.displayName = "Button";
 InputTitle.displayName = "InputTitle";
 
-const InsertForm = ({ title, children, onClickDone, onChangeTitle }) => (
+const InsertForm = ({
+  title,
+  children,
+  onClickDone,
+  onChangeTitle,
+  onFocusTitle
+}) => (
   <Container>
     <InputTitle
       rows={1}
       placeholder="Title"
       value={title}
       onChange={onChangeTitle}
+      onFocus={onFocusTitle}
     />
     {children}
     <Toolbar>
@@ -75,6 +82,7 @@ const InsertForm = ({ title, children, onClickDone, onChangeTitle }) => (
 InsertForm.propTypes = {
   onClickDone: PropTypes.func,
   onChangeTitle: PropTypes.func,
+  onFocusTitle: PropTypes.func,
   children: PropTypes.node,
   title: PropTypes.string
 };

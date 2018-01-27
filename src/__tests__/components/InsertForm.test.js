@@ -4,16 +4,19 @@ import toJSON from "enzyme-to-json";
 
 import InsertForm from "components/InsertForm";
 
-let wrapper, onClickDone, onChangeTitle;
+let wrapper, onClickDone, onChangeTitle, onFocusTitle;
 
 beforeEach(() => {
   onClickDone = jest.fn();
   onChangeTitle = jest.fn();
+  onFocusTitle = jest.fn();
+
   wrapper = shallow(
     <InsertForm
       title="Learn React"
       onClickDone={onClickDone}
       onChangeTitle={onChangeTitle}
+      onFocusTitle={onFocusTitle}
     />
   );
 });
@@ -21,6 +24,7 @@ beforeEach(() => {
 afterEach(() => {
   onClickDone.mockReset();
   onChangeTitle.mockReset();
+  onFocusTitle.mockReset();
 });
 
 describe("InsertBox", () => {
@@ -32,6 +36,12 @@ describe("InsertBox", () => {
     expect(onClickDone.mock.calls.length).toEqual(0);
     wrapper.find("Button").simulate("click");
     expect(onClickDone.mock.calls.length).toEqual(1);
+  });
+
+  it("calls 'onFocusTitle'", () => {
+    expect(onFocusTitle.mock.calls.length).toEqual(0);
+    wrapper.find("InputTitle").simulate("focus");
+    expect(onFocusTitle.mock.calls.length).toEqual(1);
   });
 
   it("calls 'onChangeTitle'", () => {

@@ -4,6 +4,7 @@ exports[`InsertBox renders correctly 1`] = `
 <styled.div>
   <InputTitle
     onChange={[Function]}
+    onFocus={[Function]}
     placeholder="Title"
     rows={1}
     value="Learn React"
