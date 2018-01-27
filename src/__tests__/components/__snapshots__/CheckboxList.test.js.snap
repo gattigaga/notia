@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxList renders correctly 1`] = `
+<div>
+  <CheckboxInput
+    isChecked={true}
+    isFocus={true}
+    isNew={false}
+    key="0"
+    label="Learn React"
+    onChangeCheck={[Function]}
+    onChangeLabel={[Function]}
+    onClickDelete={[Function]}
+    onFocus={[Function]}
+    onPressEnter={[Function]}
+  />
+  <CheckboxInput
+    isChecked={true}
+    isFocus={false}
+    isNew={false}
+    key="1"
+    label="Learn Redux"
+    onChangeCheck={[Function]}
+    onChangeLabel={[Function]}
+    onClickDelete={[Function]}
+    onFocus={[Function]}
+    onPressEnter={[Function]}
+  />
+  <CheckboxInput
+    isChecked={false}
+    isFocus={false}
+    isNew={true}
+    key="2"
+    label=""
+    onChangeCheck={[Function]}
+    onChangeLabel={[Function]}
+    onClickDelete={[Function]}
+    onFocus={[Function]}
+    onPressEnter={[Function]}
+  />
+</div>
+`;
