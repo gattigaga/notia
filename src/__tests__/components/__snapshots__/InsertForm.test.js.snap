@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InsertBox renders correctly 1`] = `
+<styled.div>
+  <InputTitle
+    onChange={[Function]}
+    placeholder="Title"
+    rows={1}
+    value="Learn React"
+  />
+  <styled.div>
+    <Button
+      onClick={[Function]}
+    >
+      DONE
+    </Button>
+  </styled.div>
+</styled.div>
+`;
