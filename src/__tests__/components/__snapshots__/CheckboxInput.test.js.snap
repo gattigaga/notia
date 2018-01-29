@@ -37,6 +37,86 @@ exports[`CheckboxInput renders as checked 1`] = `
 `;
 
 exports[`CheckboxInput renders as focused 1`] = `
+<CheckboxInput
+  isFocus={true}
+  label="Learning React"
+  onChangeCheck={[Function]}
+  onChangeLabel={[Function]}
+  onClickDelete={[Function]}
+  onFocus={[Function]}
+  onPressEnter={[Function]}
+>
+  <styled.div
+    isFocus={true}
+  >
+    <div
+      className="sc-bdVaJa bTQhwg"
+    >
+      <Check
+        onChange={[Function]}
+        type="checkbox"
+      >
+        <input
+          className="sc-bwzfXH eICtOu"
+          onChange={[Function]}
+          type="checkbox"
+        />
+      </Check>
+      <Label
+        autoFocus={true}
+        innerRef={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onKeyPress={[Function]}
+        placeholder="List Item"
+        rows={1}
+        value="Learning React"
+      >
+        <TextareaAutosize
+          autoFocus={true}
+          className="sc-ifAKCX hFtpBi"
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyPress={[Function]}
+          placeholder="List Item"
+          rows={1}
+          value="Learning React"
+        >
+          <textarea
+            autoFocus={true}
+            className="sc-ifAKCX hFtpBi"
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyPress={[Function]}
+            placeholder="List Item"
+            rows={1}
+            value="Learning React"
+          />
+        </TextareaAutosize>
+      </Label>
+      <IconDelete
+        name="close"
+        onClick={[Function]}
+      >
+        <Icon
+          className="sc-bxivhb ddmtAG"
+          name="close"
+          onClick={[Function]}
+        >
+          <i
+            className="material-icons sc-bxivhb ddmtAG"
+            onClick={[Function]}
+          >
+            close
+          </i>
+        </Icon>
+      </IconDelete>
+    </div>
+  </styled.div>
+</CheckboxInput>
+`;
+
+exports[`CheckboxInput renders as static 1`] = `
 <styled.div>
   <Check
     onChange={[Function]}
@@ -48,6 +128,7 @@ exports[`CheckboxInput renders as focused 1`] = `
     onFocus={[Function]}
     onKeyPress={[Function]}
     placeholder="List Item"
+    readOnly={true}
     rows={1}
     value="Learning React"
   />

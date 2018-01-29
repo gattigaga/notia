@@ -73,6 +73,7 @@ class CheckboxInput extends Component {
       isChecked,
       isNew,
       isFocus,
+      isStatic,
       onFocus,
       onChangeCheck,
       onChangeLabel,
@@ -94,6 +95,7 @@ class CheckboxInput extends Component {
           innerRef={ref => {
             this.label = ref;
           }}
+          readOnly={isStatic}
           autoFocus={isFocus}
           onChange={onChangeLabel}
           onFocus={onFocus}
@@ -116,6 +118,7 @@ CheckboxInput.propTypes = {
   isChecked: PropTypes.bool,
   isNew: PropTypes.bool,
   isFocus: PropTypes.bool,
+  isStatic: PropTypes.bool,
   onFocus: PropTypes.func,
   onChangeCheck: PropTypes.func,
   onChangeLabel: PropTypes.func,

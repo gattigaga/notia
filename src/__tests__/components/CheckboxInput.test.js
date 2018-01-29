@@ -59,6 +59,11 @@ describe("CheckboxInput", () => {
   it("renders as focused", () => {
     const mountWrapper = mount(component);
     mountWrapper.setProps({ isFocus: true });
+    expect(toJSON(mountWrapper)).toMatchSnapshot();
+  });
+
+  it("renders as static", () => {
+    wrapper.setProps({ isStatic: true });
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 
