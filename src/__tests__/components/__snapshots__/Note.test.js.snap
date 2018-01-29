@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Note renders with custom class 1`] = `
+<styled.div
+  className="my-class"
+>
+  <styled.h1>
+    Learning
+  </styled.h1>
+</styled.div>
+`;
+
+exports[`Note renders with type 'list' 1`] = `
+<styled.div>
+  <styled.h1>
+    Learning
+  </styled.h1>
+  <CheckboxList
+    focusIndex={-1}
+    isStatic={true}
+    items={
+      Array [
+        Object {
+          "isChecked": true,
+          "isNew": false,
+          "label": "Learn React",
+        },
+        Object {
+          "isChecked": true,
+          "isNew": false,
+          "label": "Learn Redux",
+        },
+        Object {
+          "isChecked": false,
+          "isNew": false,
+          "label": "Learn Redux Saga",
+        },
+      ]
+    }
+    onChangeCheck={[Function]}
+  />
+</styled.div>
+`;
+
+exports[`Note renders with type 'text' 1`] = `
+<styled.div>
+  <styled.h1>
+    Learning
+  </styled.h1>
+  <styled.p>
+    I want to learn React
+  </styled.p>
+</styled.div>
+`;
