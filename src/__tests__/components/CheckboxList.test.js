@@ -25,7 +25,7 @@ beforeEach(() => {
     }
   ];
 
-  wrapper = shallow(<CheckboxList items={items} focusIndex={0} />);
+  wrapper = shallow(<CheckboxList items={items} focusIndex={0} isStatic />);
 });
 
 describe("CheckboxList", () => {
