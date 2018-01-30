@@ -2,8 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import Icon from "components/Icon";
-import Tooltip from "components/Tooltip";
 import CheckboxList from "components/CheckboxList";
 
 const Container = styled.div`
