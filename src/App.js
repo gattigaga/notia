@@ -45,12 +45,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      notes: [
-        {
-          title: "Learn React",
-          content: "Yes, I want to learn React"
-        }
-      ],
+      notes: [],
       newNote: {},
       isCreate: false
     };
