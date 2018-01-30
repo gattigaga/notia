@@ -87,7 +87,7 @@ class App extends Component {
       const baseHeight = 1.7;
       const totalCols = 3;
       const x = notes.length % totalCols + 1;
-      const y = parseInt(notes.length / totalCols);
+      const y = parseInt(notes.length / totalCols, 10);
       let h, content;
 
       switch (newNote.type) {
