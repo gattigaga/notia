@@ -8,7 +8,15 @@ let wrapper;
 
 beforeEach(() => {
   const onChangeCheck = jest.fn();
-  wrapper = shallow(<Note title="Learning" onChangeCheck={onChangeCheck} />);
+  const onClickClose = jest.fn();
+
+  wrapper = shallow(
+    <Note
+      title="Learning"
+      onChangeCheck={onChangeCheck}
+      onClickClose={onClickClose}
+    />
+  );
 });
 
 describe("Note", () => {

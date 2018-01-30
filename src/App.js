@@ -45,7 +45,12 @@ class App extends Component {
     super(props);
 
     this.state = {
-      notes: [],
+      notes: [
+        {
+          title: "Learn React",
+          content: "Yes, I want to learn React"
+        }
+      ],
       newNote: {},
       isCreate: false
     };
@@ -58,6 +63,7 @@ class App extends Component {
     this.updateListItemLabel = this.updateListItemLabel.bind(this);
     this.updateListItemCheck = this.updateListItemCheck.bind(this);
     this.createListItem = this.createListItem.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
   }
 
   /**
@@ -307,6 +313,18 @@ class App extends Component {
     });
   }
 
+  /**
+   * Delete a note
+   *
+   * @param {number} noteIndex - Selected note index
+   * @memberof App
+   */
+  deleteNote(noteIndex) {
+    this.setState(prevState => ({
+      notes: prevState.notes.filter((note, index) => noteIndex !== index)
+    }));
+  }
+
   render() {
     const { notes, newNote, isCreate } = this.state;
 
@@ -369,6 +387,7 @@ class App extends Component {
                 onChangeCheck={itemIndex =>
                   this.updateListItemCheck(itemIndex, index)
                 }
+                onClickClose={() => this.deleteNote(index)}
               />
             </div>
           ))}

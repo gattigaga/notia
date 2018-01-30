@@ -3,6 +3,12 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import CheckboxList from "components/CheckboxList";
+import CloseButton from "components/CloseButton";
+
+const StyledCloseButton = styled(CloseButton)`
+  opacity: 0;
+  transition: all 0.3s;
+`;
 
 const Container = styled.div`
   position: relative;
@@ -12,6 +18,10 @@ const Container = styled.div`
 
   &:hover {
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  &:hover ${StyledCloseButton} {
+    opacity: 1;
   }
 `;
 
@@ -34,8 +44,16 @@ const Text = styled.p`
   cursor: default;
 `;
 
-const Note = ({ className, title, type, content, onChangeCheck }) => (
+const Note = ({
+  className,
+  title,
+  type,
+  content,
+  onClickClose,
+  onChangeCheck
+}) => (
   <Container className={className}>
+    <StyledCloseButton onClick={onClickClose} />
     <Title>{title}</Title>
     {type === "text" && <Text>{content}</Text>}
     {type === "list" && (
@@ -57,6 +75,7 @@ Note.propTypes = {
       })
     )
   ]),
+  onClickClose: PropTypes.func,
   onChangeCheck: PropTypes.func
 };
 
