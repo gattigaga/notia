@@ -1,12 +1,23 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import TextareaAutosize from "react-autosize-textarea";
+import GridLayout from "react-grid-layout";
 
 import InsertBox from "components/InsertBox";
 import InsertForm from "components/InsertForm";
-
+import Note from "components/Note";
 import Tool from "components/Tool";
 import CheckboxList from "components/CheckboxList";
+
+import { checkListItem, setListItemLabel } from "helper/listNote";
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #dee2e2;
+`;
 
 const InputContent = styled(TextareaAutosize)`
   width: 100%;
@@ -24,12 +35,9 @@ const InputContent = styled(TextareaAutosize)`
   }
 `;
 
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  box-sizing: border-box;
-  background: #dee2e2;
+const StyledGrid = styled(GridLayout)`
+  margin: auto;
+  width: 960px;
 `;
 
 class App extends Component {
@@ -38,15 +46,19 @@ class App extends Component {
 
     this.state = {
       notes: [],
-      newNote: {},
-      isCreate: false
+      newNote: {
+        title: "Node.js",
+        type: "text",
+        content:
+          "Node.js is an open-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side. Historically, JavaScript was used primarily for client-side scripting, in which scripts written in JavaScript are embedded in a webpage's HTML, to be run client-side by a JavaScript engine in the user's web browser."
+      },
+      isCreate: true
     };
 
     this.clear = this.clear.bind(this);
     this.create = this.create.bind(this);
     this.handleForm = this.handleForm.bind(this);
     this.submit = this.submit.bind(this);
-    this.handleListItemFocus = this.handleListItemFocus.bind(this);
     this.deleteListItem = this.deleteListItem.bind(this);
     this.updateListItemLabel = this.updateListItemLabel.bind(this);
     this.updateListItemCheck = this.updateListItemCheck.bind(this);
@@ -75,15 +87,56 @@ class App extends Component {
    * @memberof App
    */
   submit() {
-    this.setState(prevState => ({
-      notes: [{ ...prevState.newNote }, ...prevState.notes]
-    }));
+    this.setState(prevState => {
+      const { newNote, notes } = prevState;
+      const baseHeight = 1.7;
+      const totalCols = 3;
+      const x = notes.length % totalCols + 1;
+      const y = parseInt(notes.length / totalCols);
+      let h, content;
+
+      switch (newNote.type) {
+        case "text":
+          const charPerLine = 35;
+          const totalChars = newNote.content.length;
+          const totalLines = totalChars / charPerLine;
+          const heightPerLine = 0.39;
+
+          content = newNote.content;
+          h = baseHeight + totalLines * heightPerLine;
+          break;
+        case "list":
+          content = newNote.content.filter(item => !item.isNew);
+          h = baseHeight + content.length * 0.65;
+          break;
+        default:
+          break;
+      }
+
+      return {
+        notes: [
+          ...notes,
+          {
+            ...newNote,
+            content,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            grid: {
+              x,
+              y,
+              w: 1,
+              h
+            }
+          }
+        ]
+      };
+    });
   }
 
   /**
    * Create new note
    *
-   * @param {string} type
+   * @param {string} type - Note type
    * @memberof App
    */
   create(type) {
@@ -120,7 +173,7 @@ class App extends Component {
   /**
    * Handle form update
    *
-   * @param {object} data
+   * @param {object} data - Specified field which want to be updated
    * @memberof App
    */
   handleForm(data) {
@@ -133,65 +186,52 @@ class App extends Component {
   }
 
   /**
-   * Handle focus on list item
-   *
-   * @param {number} index
-   * @memberof App
-   */
-  handleListItemFocus(index) {
-    this.setState(prevState => ({
-      newNote: {
-        ...prevState.newNote,
-        focusIndex: index
-      }
-    }));
-  }
-
-  /**
    * Update a list item check
    *
-   * @param {number} itemIndex
+   * @param {number} itemIndex - Selected item index
+   * @param {number} [noteIndex=-1] - Selected note index
    * @memberof App
    */
-  updateListItemCheck(itemIndex) {
-    this.setState(prevState => ({
-      newNote: {
-        ...prevState.newNote,
-        content: prevState.newNote.content.map((item, index) => {
-          if (itemIndex === index) {
-            return {
-              ...item,
-              isChecked: !item.isChecked
-            };
-          }
+  updateListItemCheck(itemIndex, noteIndex = -1) {
+    this.setState(prevState => {
+      const { notes, newNote } = prevState;
 
-          return item;
-        })
+      if (noteIndex > -1) {
+        return {
+          notes: notes.map((note, index) => {
+            if (noteIndex === index) {
+              return {
+                ...note,
+                content: checkListItem(note.content, itemIndex)
+              };
+            }
+
+            return note;
+          })
+        };
       }
-    }));
+
+      return {
+        newNote: {
+          ...newNote,
+          content: checkListItem(newNote.content, itemIndex)
+        }
+      };
+    });
   }
 
   /**
    * Update a list item label
    *
-   * @param {string} label
-   * @param {number} itemIndex
+   * @param {string} label - New label
+   * @param {number} itemIndex - Selected index
    * @memberof App
    */
   updateListItemLabel(label, itemIndex) {
     this.setState(prevState => ({
       newNote: {
         ...prevState.newNote,
-        content: prevState.newNote.content.map((item, index) => {
-          if (itemIndex === index) {
-            return {
-              ...item,
-              label
-            };
-          }
-
-          return item;
-        })
+        content: setListItemLabel(prevState.newNote.content, label, itemIndex)
       }
     }));
   }
@@ -199,7 +239,7 @@ class App extends Component {
   /**
    * Delete a list item
    *
-   * @param {number} itemIndex
+   * @param {number} itemIndex - Selected index
    * @memberof App
    */
   deleteListItem(itemIndex) {
@@ -216,7 +256,7 @@ class App extends Component {
   /**
    * Create new list item
    *
-   * @param {number} itemIndex
+   * @param {number} itemIndex - Selected index
    * @memberof App
    */
   createListItem(itemIndex) {
@@ -273,7 +313,7 @@ class App extends Component {
   }
 
   render() {
-    const { newNote, isCreate } = this.state;
+    const { notes, newNote, isCreate } = this.state;
 
     return (
       <Container>
@@ -288,7 +328,7 @@ class App extends Component {
         ) : (
           <InsertForm
             title={newNote.title}
-            onFocusTitle={() => this.handleListItemFocus(-1)}
+            onFocusTitle={() => this.handleForm({ focusIndex: -1 })}
             onChangeTitle={e => this.handleForm({ title: e.target.value })}
             onClickDone={() => {
               this.submit();
@@ -307,7 +347,7 @@ class App extends Component {
               <CheckboxList
                 items={newNote.content}
                 focusIndex={newNote.focusIndex}
-                onFocus={this.handleListItemFocus}
+                onFocus={focusIndex => this.handleForm({ focusIndex })}
                 onChangeLabel={this.updateListItemLabel}
                 onClickDelete={this.deleteListItem}
                 onChangeCheck={this.updateListItemCheck}
@@ -316,6 +356,28 @@ class App extends Component {
             )}
           </InsertForm>
         )}
+
+        <StyledGrid
+          cols={3}
+          rowHeight={32}
+          width={960}
+          compactType="horizontal"
+          margin={[24, 24]}
+          isResizable={false}
+        >
+          {notes.map((note, index) => (
+            <div key={index} data-grid={note.grid}>
+              <Note
+                title={note.title}
+                type={note.type}
+                content={note.content}
+                onChangeCheck={itemIndex =>
+                  this.updateListItemCheck(itemIndex, index)
+                }
+              />
+            </div>
+          ))}
+        </StyledGrid>
       </Container>
     );
   }
