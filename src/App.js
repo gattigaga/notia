@@ -47,7 +47,7 @@ class App extends Component {
     this.state = {
       notes: [],
       newNote: {},
-      isCreate: true
+      isCreate: false
     };
 
     this.clear = this.clear.bind(this);
