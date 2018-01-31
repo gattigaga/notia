@@ -5,11 +5,11 @@
  * @param {object[]} list - Source of data
  * @param {string} list[].label - Item label
  * @param {boolean} list[].isChecked - Check flag
- * @param {number} index - Index of item
+ * @param {number} itemID - ID of item
  */
-export function checkListItem(list, index) {
-  return list.map((item, itemIndex) => {
-    if (itemIndex === index) {
+export function checkListItem(list, itemID) {
+  return list.map(item => {
+    if (itemID === item.id) {
       return {
         ...item,
         isChecked: !item.isChecked
@@ -28,11 +28,11 @@ export function checkListItem(list, index) {
  * @param {string} list[].label - Item label
  * @param {boolean} list[].isChecked - Check flag
  * @param {string} label - New label
- * @param {number} index - Index of item
+ * @param {number} itemID - ID of item
  */
-export function setListItemLabel(list, label, index) {
-  return list.map((item, itemIndex) => {
-    if (itemIndex === index) {
+export function setListItemLabel(list, label, itemID) {
+  return list.map(item => {
+    if (itemID === item.id) {
       return {
         ...item,
         label
