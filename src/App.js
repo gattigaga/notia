@@ -114,6 +114,7 @@ class App extends Component {
           ...notes,
           {
             ...newNote,
+            id: notes.length + 1,
             content,
             createdAt: Date.now(),
             updatedAt: Date.now(),
@@ -150,6 +151,7 @@ class App extends Component {
         case "list":
           content = [
             {
+              id: null,
               label: "",
               isChecked: false,
               isNew: true
@@ -184,21 +186,22 @@ class App extends Component {
   /**
    * Update a list item check
    *
-   * @param {number} itemIndex - Selected item index
-   * @param {number} [noteIndex=-1] - Selected note index
+   * @param {number} itemID - Selected item ID
+   * @param {number} [noteID=-1] - Selected note ID
    * @memberof App
    */
-  updateListItemCheck(itemIndex, noteIndex = -1) {
+  updateListItemCheck(itemID, noteID = -1) {
     this.setState(prevState => {
       const { notes, newNote } = prevState;
+      const isCheckInForm = noteID === -1;
 
-      if (noteIndex > -1) {
+      if (!isCheckInForm) {
         return {
-          notes: notes.map((note, index) => {
-            if (noteIndex === index) {
+          notes: notes.map(note => {
+            if (noteID === note.id) {
               return {
                 ...note,
-                content: checkListItem(note.content, itemIndex)
+                content: checkListItem(note.content, itemID)
               };
             }
 
@@ -210,7 +213,7 @@ class App extends Component {
       return {
         newNote: {
           ...newNote,
-          content: checkListItem(newNote.content, itemIndex)
+          content: checkListItem(newNote.content, itemID)
         }
       };
     });
@@ -220,14 +223,14 @@ class App extends Component {
    * Update a list item label
    *
    * @param {string} label - New label
-   * @param {number} itemIndex - Selected index
+   * @param {number} itemID - Selected item ID
    * @memberof App
    */
-  updateListItemLabel(label, itemIndex) {
+  updateListItemLabel(label, itemID) {
     this.setState(prevState => ({
       newNote: {
         ...prevState.newNote,
-        content: setListItemLabel(prevState.newNote.content, label, itemIndex)
+        content: setListItemLabel(prevState.newNote.content, label, itemID)
       }
     }));
   }
@@ -235,66 +238,72 @@ class App extends Component {
   /**
    * Delete a list item
    *
-   * @param {number} itemIndex - Selected index
+   * @param {number} itemID - Selected item ID
    * @memberof App
    */
-  deleteListItem(itemIndex) {
+  deleteListItem(itemID) {
     this.setState(prevState => ({
       newNote: {
         ...prevState.newNote,
-        content: prevState.newNote.content.filter(
-          (item, index) => itemIndex !== index
-        )
+        content: prevState.newNote.content.filter(item => itemID !== item.id)
       }
     }));
   }
 
   /**
-   * Create new list item
+   * Create new itemID
    *
-   * @param {number} itemIndex - Selected index
+   * @param {number} itemID - Selected item ID
+   * @param {number} itemIndex - Selected item index
    * @memberof App
    */
-  createListItem(itemIndex) {
+  createListItem(itemID, itemIndex) {
     this.setState(prevState => {
       const { content } = prevState.newNote;
-      const lastIndex = content.length - 1;
+      const lastID = content.length;
       // Is cursor focus on last item created (above blank new item)
-      const isLastItem = itemIndex === lastIndex - 1;
+      const isLastItem = itemID === lastID;
       // Is cursor focus on blank new item (very bottom of the list)
-      const isBlankNew = itemIndex === lastIndex;
+      const isBlankNew = !itemID;
       let newContent;
 
       const blankItem = {
+        id: null,
         label: "",
         isChecked: false,
         isNew: true
       };
 
-      // Apply new item as created item
-      const applyCreatedItem = (item, index) => {
-        if (itemIndex === index) {
-          return {
-            ...item,
-            isNew: false
-          };
-        }
-
-        return item;
-      };
-
+      // If cursor focus in middle list not blank new one
       if (!isBlankNew) {
         newContent = content.slice(0);
 
         if (!isLastItem) {
           // Show with checkbox instead of plus icon
-          blankItem.isNew = false;
+          const newItem = {
+            ...blankItem,
+            id: lastID,
+            isNew: false
+          };
           // Insert blank new item between created items
-          newContent.splice(itemIndex + 1, 0, blankItem);
+          newContent.splice(itemIndex + 1, 0, newItem);
         }
       } else {
         // Show checkbox on current created item
         // Instead of plus icon
+        // Apply new item as created item
+        const applyCreatedItem = item => {
+          if (itemID === item.id) {
+            return {
+              ...item,
+              id: lastID,
+              isNew: false
+            };
+          }
+
+          return item;
+        };
+
         newContent = [...content.map(applyCreatedItem), blankItem];
       }
 
@@ -311,12 +320,12 @@ class App extends Component {
   /**
    * Delete a note
    *
-   * @param {number} noteIndex - Selected note index
+   * @param {number} noteID - Selected note ID
    * @memberof App
    */
-  deleteNote(noteIndex) {
+  deleteNote(noteID) {
     this.setState(prevState => ({
-      notes: prevState.notes.filter((note, index) => noteIndex !== index)
+      notes: prevState.notes.filter(note => noteID !== note.id)
     }));
   }
 
@@ -373,16 +382,16 @@ class App extends Component {
           margin={[24, 24]}
           isResizable={false}
         >
-          {notes.map((note, index) => (
-            <div key={index} data-grid={note.grid}>
+          {notes.map(note => (
+            <div key={note.id} data-grid={note.grid}>
               <Note
                 title={note.title}
                 type={note.type}
                 content={note.content}
-                onChangeCheck={itemIndex =>
-                  this.updateListItemCheck(itemIndex, index)
+                onChangeCheck={itemID =>
+                  this.updateListItemCheck(itemID, note.id)
                 }
-                onClickClose={() => this.deleteNote(index)}
+                onClickClose={() => this.deleteNote(note.id)}
               />
             </div>
           ))}

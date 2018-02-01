@@ -16,7 +16,7 @@ const CheckboxList = ({
   <div>
     {items.map((item, index) => (
       <CheckboxInput
-        key={index}
+        key={item.id}
         label={item.label}
         isChecked={item.isChecked}
         isFocus={focusIndex === index}
@@ -24,11 +24,11 @@ const CheckboxList = ({
         isStatic={isStatic}
         onFocus={() => onFocus && onFocus(index)}
         onChangeLabel={e =>
-          onChangeLabel && onChangeLabel(e.target.value, index)
+          onChangeLabel && onChangeLabel(e.target.value, item.id)
         }
-        onClickDelete={() => onClickDelete && onClickDelete(index)}
-        onChangeCheck={() => onChangeCheck && onChangeCheck(index)}
-        onPressEnter={() => onPressEnter && onPressEnter(index)}
+        onClickDelete={() => onClickDelete && onClickDelete(item.id)}
+        onChangeCheck={() => onChangeCheck && onChangeCheck(item.id)}
+        onPressEnter={() => onPressEnter && onPressEnter(item.id, index)}
       />
     ))}
   </div>

@@ -9,16 +9,19 @@ let wrapper, items;
 beforeEach(() => {
   items = [
     {
+      id: 1,
       label: "Learn React",
       isChecked: true,
       isNew: false
     },
     {
+      id: 2,
       label: "Learn Redux",
       isChecked: true,
       isNew: false
     },
     {
+      id: 3,
       label: "",
       isChecked: false,
       isNew: true
