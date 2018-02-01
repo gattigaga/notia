@@ -333,7 +333,16 @@ class App extends Component {
     const { notes, newNote, isCreate } = this.state;
 
     return (
-      <Container>
+      <Container
+        onClick={e => {
+          e.preventDefault();
+
+          // Close form if empty place clicked
+          if (e.target === e.currentTarget) {
+            this.clear();
+          }
+        }}
+      >
         {!isCreate ? (
           <InsertBox onClick={() => this.create("text")}>
             <Tool
