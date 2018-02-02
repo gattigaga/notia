@@ -58,13 +58,14 @@ Button.displayName = "Button";
 InputTitle.displayName = "InputTitle";
 
 const InsertForm = ({
+  className,
   title,
   children,
   onClickDone,
   onChangeTitle,
   onFocusTitle
 }) => (
-  <Container>
+  <Container className={className}>
     <InputTitle
       rows={1}
       placeholder="Title"
@@ -80,6 +81,7 @@ const InsertForm = ({
 );
 
 InsertForm.propTypes = {
+  className: PropTypes.string,
   onClickDone: PropTypes.func,
   onChangeTitle: PropTypes.func,
   onFocusTitle: PropTypes.func,
