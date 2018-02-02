@@ -3,6 +3,7 @@
 exports[`Note renders with custom class 1`] = `
 <styled.div
   className="my-class"
+  onClick={[Function]}
 >
   <Styled(CloseButton)
     onClick={[Function]}
@@ -14,7 +15,9 @@ exports[`Note renders with custom class 1`] = `
 `;
 
 exports[`Note renders with type 'list' 1`] = `
-<styled.div>
+<styled.div
+  onClick={[Function]}
+>
   <Styled(CloseButton)
     onClick={[Function]}
   />
@@ -49,7 +52,9 @@ exports[`Note renders with type 'list' 1`] = `
 `;
 
 exports[`Note renders with type 'text' 1`] = `
-<styled.div>
+<styled.div
+  onClick={[Function]}
+>
   <Styled(CloseButton)
     onClick={[Function]}
   />

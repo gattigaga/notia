@@ -50,9 +50,10 @@ const Note = ({
   type,
   content,
   onClickClose,
-  onChangeCheck
+  onChangeCheck,
+  onClick
 }) => (
-  <Container className={className}>
+  <Container className={className} onClick={onClick}>
     <StyledCloseButton onClick={onClickClose} />
     <Title>{title}</Title>
     {type === "text" && <Text>{content}</Text>}
@@ -76,7 +77,8 @@ Note.propTypes = {
     )
   ]),
   onClickClose: PropTypes.func,
-  onChangeCheck: PropTypes.func
+  onChangeCheck: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 export default Note;

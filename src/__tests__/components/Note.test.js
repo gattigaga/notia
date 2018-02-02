@@ -4,17 +4,19 @@ import toJSON from "enzyme-to-json";
 
 import Note from "components/Note";
 
-let wrapper;
+let wrapper, onClick;
 
 beforeEach(() => {
   const onChangeCheck = jest.fn();
   const onClickClose = jest.fn();
+  onClick = jest.fn();
 
   wrapper = shallow(
     <Note
       title="Learning"
       onChangeCheck={onChangeCheck}
       onClickClose={onClickClose}
+      onClick={onClick}
     />
   );
 });
@@ -60,5 +62,11 @@ describe("Note", () => {
     });
 
     expect(toJSON(wrapper)).toMatchSnapshot();
+  });
+
+  it("calls 'onClick'", () => {
+    expect(onClick.mock.calls.length).toEqual(0);
+    wrapper.simulate("click");
+    expect(onClick.mock.calls.length).toEqual(1);
   });
 });
