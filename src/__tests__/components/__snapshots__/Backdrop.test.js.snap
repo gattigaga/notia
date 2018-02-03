@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Backdrop renders correctly 1`] = `
+<styled.div
+  isOpen={true}
+  onClick={[Function]}
+>
+  <h1>
+    Hello World
+  </h1>
+</styled.div>
+`;
