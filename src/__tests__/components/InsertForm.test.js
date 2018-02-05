@@ -32,6 +32,14 @@ describe("InsertBox", () => {
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 
+  it("renders in edit mode", () => {
+    wrapper.setProps({
+      mode: "edit",
+      timestamp: 1517848606477
+    });
+    expect(toJSON(wrapper)).toMatchSnapshot();
+  });
+
   it("renders with additional class", () => {
     wrapper.setProps({ className: "my-class" });
     expect(toJSON(wrapper)).toMatchSnapshot();

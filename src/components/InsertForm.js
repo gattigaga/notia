@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import TextareaAutosize from "react-autosize-textarea";
+import moment from "moment";
 
 const Container = styled.div`
   width: 480px;
@@ -54,31 +55,48 @@ const Button = styled.button`
   }
 `;
 
+const Date = styled.p`
+  color: #aaa;
+  font-size: 12px;
+  font-family: Roboto;
+  font-style: italic;
+  margin: 0px;
+  margin-top: 16px;
+  text-align: right;
+`;
+
 Button.displayName = "Button";
 InputTitle.displayName = "InputTitle";
 
 const InsertForm = ({
   className,
   title,
+  mode,
+  timestamp,
   children,
   onClickDone,
   onChangeTitle,
   onFocusTitle
-}) => (
-  <Container className={className}>
-    <InputTitle
-      rows={1}
-      placeholder="Title"
-      value={title}
-      onChange={onChangeTitle}
-      onFocus={onFocusTitle}
-    />
-    {children}
-    <Toolbar>
-      <Button onClick={onClickDone}>DONE</Button>
-    </Toolbar>
-  </Container>
-);
+}) => {
+  const date = moment(timestamp).format("LLLL");
+
+  return (
+    <Container className={className}>
+      <InputTitle
+        rows={1}
+        placeholder="Title"
+        value={title}
+        onChange={onChangeTitle}
+        onFocus={onFocusTitle}
+      />
+      {children}
+      {mode === "edit" && <Date>Edited at {date}</Date>}
+      <Toolbar>
+        <Button onClick={onClickDone}>DONE</Button>
+      </Toolbar>
+    </Container>
+  );
+};
 
 InsertForm.propTypes = {
   className: PropTypes.string,
@@ -86,7 +104,14 @@ InsertForm.propTypes = {
   onChangeTitle: PropTypes.func,
   onFocusTitle: PropTypes.func,
   children: PropTypes.node,
-  title: PropTypes.string
+  title: PropTypes.string,
+  mode: PropTypes.oneOf(["create", "edit"]),
+  timestamp: PropTypes.number
+};
+
+InsertForm.defaultProps = {
+  mode: "create",
+  timestamp: 0
 };
 
 export default InsertForm;
