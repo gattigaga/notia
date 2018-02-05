@@ -4,6 +4,7 @@
   "homepage": "https://gattigaga.github.io/notia/",
   "private": true,
   "dependencies": {
+    "moment": "^2.20.1",
     "normalize.css": "^7.0.0",
     "pouchdb": "^6.4.2",
     "prop-types": "^15.6.0",
