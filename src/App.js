@@ -8,6 +8,7 @@ import InsertForm from "components/InsertForm";
 import Note from "components/Note";
 import Tool from "components/Tool";
 import CheckboxList from "components/CheckboxList";
+import Backdrop from "components/Backdrop";
 
 import { checkListItem, setListItemLabel } from "helper/listNote";
 
@@ -40,18 +41,72 @@ const StyledGrid = styled(GridLayout)`
   width: 960px;
 `;
 
+const EditForm = styled(InsertForm)`
+  margin-top: 128px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4);
+`;
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      notes: [],
+      notes: [
+        {
+          id: 1,
+          title: "Node.js",
+          type: "text",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          content:
+            "Node.js is an open-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side. Historically, JavaScript was used primarily for client-side scripting, in which scripts written in JavaScript are embedded in a webpage's HTML, to be run client-side by a JavaScript engine in the user's web browser.",
+          grid: {
+            w: 1,
+            h: 5,
+            x: 0,
+            y: 0
+          }
+        },
+        {
+          id: 2,
+          title: "Node.js",
+          type: "list",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          content: [
+            {
+              id: 1,
+              label: "Item 1",
+              isChecked: false
+            },
+            {
+              id: 2,
+              label: "Item 2",
+              isChecked: false
+            },
+            {
+              id: 3,
+              label: "Item 3",
+              isChecked: false
+            }
+          ],
+          grid: {
+            w: 1,
+            h: 5,
+            x: 1,
+            y: 0
+          }
+        }
+      ],
       newNote: {},
-      isCreate: false
+      editNote: {},
+      isCreate: false,
+      isEdit: false
     };
 
     this.clear = this.clear.bind(this);
     this.create = this.create.bind(this);
+    this.edit = this.edit.bind(this);
     this.handleForm = this.handleForm.bind(this);
     this.submit = this.submit.bind(this);
     this.deleteListItem = this.deleteListItem.bind(this);
@@ -64,12 +119,15 @@ class App extends Component {
   /**
    * Clear note form
    *
+   * @param {string} formName - Form's name in state
    * @memberof App
    */
-  clear() {
+  clear(formName) {
+    const isOpen = formName === "newNote" ? "isCreate" : "isEdit";
+
     this.setState({
-      isCreate: false,
-      newNote: {
+      [isOpen]: false,
+      [formName]: {
         title: "",
         type: "text",
         content: ""
@@ -78,42 +136,61 @@ class App extends Component {
   }
 
   /**
-   * Submit new note
+   * Submit created or edited note
    *
+   * @param {string} formName - Form's name in state
    * @memberof App
    */
-  submit() {
+  submit(formName) {
     this.setState(prevState => {
-      const { newNote, notes } = prevState;
+      const { notes } = prevState;
+      const form = prevState[formName];
       const baseHeight = 1.7;
       const totalCols = 3;
       const x = notes.length % totalCols + 1;
       const y = parseInt(notes.length / totalCols, 10);
       let h, content;
 
-      switch (newNote.type) {
+      switch (form.type) {
         case "text":
           const charPerLine = 35;
-          const totalChars = newNote.content.length;
+          const totalChars = form.content.length;
           const totalLines = totalChars / charPerLine;
           const heightPerLine = 0.39;
 
-          content = newNote.content;
+          content = form.content;
           h = baseHeight + totalLines * heightPerLine;
           break;
         case "list":
-          content = newNote.content.filter(item => !item.isNew);
+          content = form.content.filter(item => !item.isNew);
           h = baseHeight + content.length * 0.65;
           break;
         default:
           break;
       }
 
+      if (formName === "editNote") {
+        return {
+          notes: notes.map(note => {
+            if (form.id === note.id) {
+              return {
+                ...note,
+                title: form.title,
+                content: form.content,
+                updatedAt: Date.now()
+              };
+            }
+
+            return note;
+          })
+        };
+      }
+
       return {
         notes: [
           ...notes,
           {
-            ...newNote,
+            ...form,
             id: notes.length + 1,
             content,
             createdAt: Date.now(),
@@ -169,15 +246,35 @@ class App extends Component {
   }
 
   /**
+   * Edit an existing note
+   *
+   * @param {object} note - Note which want to be edited
+   * @param {number} note.id - Note's ID
+   * @param {string} note.title - Note's title
+   * @param {string} note.type - Note's type
+   * @param {(string|object[])} note.content - Note's content based on it's type
+   * @param {number} note.createdAt - Time when note was created
+   * @param {number} note.updatedAt - Time when note was edited
+   * @memberof App
+   */
+  edit(note) {
+    this.setState({
+      editNote: note,
+      isEdit: true
+    });
+  }
+
+  /**
    * Handle form update
    *
+   * @param {string} formName - Form's name in state
    * @param {object} data - Specified field which want to be updated
    * @memberof App
    */
-  handleForm(data) {
+  handleForm(formName, data) {
     this.setState(prevState => ({
-      newNote: {
-        ...prevState.newNote,
+      [formName]: {
+        ...prevState[formName],
         ...data
       }
     }));
@@ -186,13 +283,14 @@ class App extends Component {
   /**
    * Update a list item check
    *
+   * @param {string} formName - Form's name in state
    * @param {number} itemID - Selected item ID
    * @param {number} [noteID=-1] - Selected note ID
    * @memberof App
    */
-  updateListItemCheck(itemID, noteID = -1) {
+  updateListItemCheck(formName, itemID, noteID = -1) {
     this.setState(prevState => {
-      const { notes, newNote } = prevState;
+      const { notes } = prevState;
       const isCheckInForm = noteID === -1;
 
       if (!isCheckInForm) {
@@ -211,9 +309,9 @@ class App extends Component {
       }
 
       return {
-        newNote: {
-          ...newNote,
-          content: checkListItem(newNote.content, itemID)
+        [formName]: {
+          ...prevState[formName],
+          content: checkListItem(prevState[formName].content, itemID)
         }
       };
     });
@@ -222,15 +320,16 @@ class App extends Component {
   /**
    * Update a list item label
    *
+   * @param {string} formName - Form's name in state
    * @param {string} label - New label
    * @param {number} itemID - Selected item ID
    * @memberof App
    */
-  updateListItemLabel(label, itemID) {
+  updateListItemLabel(formName, label, itemID) {
     this.setState(prevState => ({
-      newNote: {
-        ...prevState.newNote,
-        content: setListItemLabel(prevState.newNote.content, label, itemID)
+      [formName]: {
+        ...prevState[formName],
+        content: setListItemLabel(prevState[formName].content, label, itemID)
       }
     }));
   }
@@ -238,14 +337,15 @@ class App extends Component {
   /**
    * Delete a list item
    *
+   * @param {string} formName - Form's name in state
    * @param {number} itemID - Selected item ID
    * @memberof App
    */
-  deleteListItem(itemID) {
+  deleteListItem(formName, itemID) {
     this.setState(prevState => ({
-      newNote: {
-        ...prevState.newNote,
-        content: prevState.newNote.content.filter(item => itemID !== item.id)
+      [formName]: {
+        ...prevState[formName],
+        content: prevState[formName].content.filter(item => itemID !== item.id)
       }
     }));
   }
@@ -253,13 +353,14 @@ class App extends Component {
   /**
    * Create new itemID
    *
+   * @param {string} formName - Form's name in state
    * @param {number} itemID - Selected item ID
    * @param {number} itemIndex - Selected item index
    * @memberof App
    */
-  createListItem(itemID, itemIndex) {
+  createListItem(formName, itemID, itemIndex) {
     this.setState(prevState => {
-      const { content } = prevState.newNote;
+      const { content } = prevState[formName];
       const lastID = content.length;
       // Is cursor focus on last item created (above blank new item)
       const isLastItem = itemID === lastID;
@@ -308,8 +409,8 @@ class App extends Component {
       }
 
       return {
-        newNote: {
-          ...prevState.newNote,
+        [formName]: {
+          ...prevState[formName],
           content: newContent,
           focusIndex: itemIndex + 1
         }
@@ -330,16 +431,14 @@ class App extends Component {
   }
 
   render() {
-    const { notes, newNote, isCreate } = this.state;
+    const { notes, newNote, editNote, isCreate, isEdit } = this.state;
 
     return (
       <Container
         onClick={e => {
-          e.preventDefault();
-
           // Close form if empty place clicked
           if (e.target === e.currentTarget) {
-            this.clear();
+            this.clear("newNote");
           }
         }}
       >
@@ -354,11 +453,13 @@ class App extends Component {
         ) : (
           <InsertForm
             title={newNote.title}
-            onFocusTitle={() => this.handleForm({ focusIndex: -1 })}
-            onChangeTitle={e => this.handleForm({ title: e.target.value })}
+            onFocusTitle={() => this.handleForm("newNote", { focusIndex: -1 })}
+            onChangeTitle={e =>
+              this.handleForm("newNote", { title: e.target.value })
+            }
             onClickDone={() => {
-              this.submit();
-              this.clear();
+              this.submit("newNote");
+              this.clear("newNote");
             }}
           >
             {newNote.type === "text" && (
@@ -366,18 +467,28 @@ class App extends Component {
                 rows={1}
                 placeholder="What do you think ?"
                 value={newNote.content}
-                onChange={e => this.handleForm({ content: e.target.value })}
+                onChange={e =>
+                  this.handleForm("newNote", { content: e.target.value })
+                }
               />
             )}
             {newNote.type === "list" && (
               <CheckboxList
                 items={newNote.content}
                 focusIndex={newNote.focusIndex}
-                onFocus={focusIndex => this.handleForm({ focusIndex })}
-                onChangeLabel={this.updateListItemLabel}
-                onClickDelete={this.deleteListItem}
-                onChangeCheck={this.updateListItemCheck}
-                onPressEnter={this.createListItem}
+                onFocus={focusIndex =>
+                  this.handleForm("newNote", { focusIndex })
+                }
+                onChangeLabel={(label, itemID) =>
+                  this.updateListItemLabel("newNote", label, itemID)
+                }
+                onClickDelete={itemID => this.deleteListItem("newNote", itemID)}
+                onChangeCheck={itemID =>
+                  this.updateListItemCheck("newNote", itemID)
+                }
+                onPressEnter={(itemID, itemIndex) =>
+                  this.createListItem("newNote", itemID, itemIndex)
+                }
               />
             )}
           </InsertForm>
@@ -398,13 +509,76 @@ class App extends Component {
                 type={note.type}
                 content={note.content}
                 onChangeCheck={itemID =>
-                  this.updateListItemCheck(itemID, note.id)
+                  this.updateListItemCheck("newNote", itemID, note.id)
                 }
-                onClickClose={() => this.deleteNote(note.id)}
+                onClickClose={e => this.deleteNote(note.id)}
+                onClick={e => {
+                  const { target } = e;
+                  const isCheckBox = target.type === "checkbox";
+                  const isCloseButton = target.className.includes("material");
+
+                  if (!isCheckBox && !isCloseButton) {
+                    this.edit(note);
+                  }
+                }}
               />
             </div>
           ))}
         </StyledGrid>
+
+        <Backdrop
+          isOpen={isEdit}
+          onClick={e => {
+            // Close form if empty place clicked
+            if (e.target === e.currentTarget) {
+              this.clear("editNote");
+            }
+          }}
+        >
+          <EditForm
+            title={editNote.title}
+            onFocusTitle={() => this.handleForm("editNote", { focusIndex: -1 })}
+            onChangeTitle={e =>
+              this.handleForm("editNote", { title: e.target.value })
+            }
+            onClickDone={() => {
+              this.submit("editNote");
+              this.clear("editNote");
+            }}
+          >
+            {editNote.type === "text" && (
+              <InputContent
+                rows={1}
+                placeholder="What do you think ?"
+                value={editNote.content}
+                onChange={e =>
+                  this.handleForm("editNote", { content: e.target.value })
+                }
+              />
+            )}
+            {editNote.type === "list" && (
+              <CheckboxList
+                items={editNote.content}
+                focusIndex={editNote.focusIndex}
+                onFocus={focusIndex =>
+                  this.handleForm("editNote", { focusIndex })
+                }
+                onChangeLabel={(label, itemID) =>
+                  this.updateListItemLabel("editNote", label, itemID)
+                }
+                onClickDelete={itemID =>
+                  this.deleteListItem("editNote", itemID)
+                }
+                onChangeCheck={itemID =>
+                  this.updateListItemCheck("editNote", itemID)
+                }
+                onPressEnter={(itemID, itemIndex) =>
+                  this.createListItem("editNote", itemID, itemIndex)
+                }
+              />
+            )}
+          </EditForm>
+        </Backdrop>
       </Container>
     );
   }
