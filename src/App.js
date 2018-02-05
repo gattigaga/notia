@@ -51,53 +51,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      notes: [
-        {
-          id: 1,
-          title: "Node.js",
-          type: "text",
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          content:
-            "Node.js is an open-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side. Historically, JavaScript was used primarily for client-side scripting, in which scripts written in JavaScript are embedded in a webpage's HTML, to be run client-side by a JavaScript engine in the user's web browser.",
-          grid: {
-            w: 1,
-            h: 5,
-            x: 0,
-            y: 0
-          }
-        },
-        {
-          id: 2,
-          title: "Node.js",
-          type: "list",
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          content: [
-            {
-              id: 1,
-              label: "Item 1",
-              isChecked: false
-            },
-            {
-              id: 2,
-              label: "Item 2",
-              isChecked: false
-            },
-            {
-              id: 3,
-              label: "Item 3",
-              isChecked: false
-            }
-          ],
-          grid: {
-            w: 1,
-            h: 5,
-            x: 1,
-            y: 0
-          }
-        }
-      ],
+      notes: [],
       newNote: {},
       editNote: {},
       isCreate: false,
@@ -537,6 +491,8 @@ class App extends Component {
         >
           <EditForm
             title={editNote.title}
+            mode="edit"
+            timestamp={editNote.updatedAt}
             onFocusTitle={() => this.handleForm("editNote", { focusIndex: -1 })}
             onChangeTitle={e =>
               this.handleForm("editNote", { title: e.target.value })
