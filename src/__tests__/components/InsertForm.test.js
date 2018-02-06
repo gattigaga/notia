@@ -27,7 +27,7 @@ afterEach(() => {
   onFocusTitle.mockReset();
 });
 
-describe("InsertBox", () => {
+describe("InsertForm", () => {
   it("renders correctly", () => {
     expect(toJSON(wrapper)).toMatchSnapshot();
   });

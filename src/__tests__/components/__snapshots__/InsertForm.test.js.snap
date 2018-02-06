@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InsertBox renders correctly 1`] = `
+exports[`InsertForm renders correctly 1`] = `
 <styled.div>
   <InputTitle
     onChange={[Function]}
@@ -19,7 +19,7 @@ exports[`InsertBox renders correctly 1`] = `
 </styled.div>
 `;
 
-exports[`InsertBox renders in edit mode 1`] = `
+exports[`InsertForm renders in edit mode 1`] = `
 <styled.div>
   <InputTitle
     onChange={[Function]}
@@ -42,7 +42,7 @@ exports[`InsertBox renders in edit mode 1`] = `
 </styled.div>
 `;
 
-exports[`InsertBox renders with additional class 1`] = `
+exports[`InsertForm renders with additional class 1`] = `
 <styled.div
   className="my-class"
 >
