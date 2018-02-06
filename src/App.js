@@ -153,7 +153,7 @@ class App extends Component {
               const result = {
                 ...note,
                 title: form.title,
-                content: form.content,
+                content: content,
                 updatedAt: Date.now()
               };
 
@@ -244,9 +244,26 @@ class App extends Component {
    * @memberof App
    */
   edit(note) {
+    let { content } = note;
+
+    if (note.type === "list") {
+      content = [
+        ...content,
+        {
+          _id: null,
+          label: "",
+          isChecked: false,
+          isNew: true
+        }
+      ];
+    }
+
     this.setState({
-      editNote: note,
-      isEdit: true
+      isEdit: true,
+      editNote: {
+        ...note,
+        content
+      }
     });
   }
 
