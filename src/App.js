@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import TextareaAutosize from "react-autosize-textarea";
 import GridLayout from "react-grid-layout";
+import PouchDB from "pouchdb";
 
 import InsertBox from "components/InsertBox";
 import InsertForm from "components/InsertForm";
@@ -58,6 +59,7 @@ class App extends Component {
       isEdit: false
     };
 
+    this.loadAllNotes = this.loadAllNotes.bind(this);
     this.clear = this.clear.bind(this);
     this.create = this.create.bind(this);
     this.edit = this.edit.bind(this);
@@ -68,6 +70,27 @@ class App extends Component {
     this.updateListItemCheck = this.updateListItemCheck.bind(this);
     this.createListItem = this.createListItem.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
+  }
+
+  componentDidMount() {
+    this.db = new PouchDB("notia");
+    this.loadAllNotes();
+  }
+
+  /**
+   * Load all notes from Database
+   *
+   * @memberof App
+   */
+  async loadAllNotes() {
+    try {
+      const { rows } = await this.db.allDocs({ include_docs: true });
+      const notes = rows.map(({ doc }) => doc);
+
+      this.setState({ notes });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /**
@@ -103,7 +126,7 @@ class App extends Component {
       const totalCols = 3;
       const x = notes.length % totalCols + 1;
       const y = parseInt(notes.length / totalCols, 10);
-      let h, content;
+      let h, content, result;
 
       switch (form.type) {
         case "text":
@@ -124,41 +147,50 @@ class App extends Component {
       }
 
       if (formName === "editNote") {
-        return {
+        result = {
           notes: notes.map(note => {
-            if (form.id === note.id) {
-              return {
+            if (form._id === note._id) {
+              const result = {
                 ...note,
                 title: form.title,
                 content: form.content,
                 updatedAt: Date.now()
               };
+
+              // Update note to database
+              this.db.put(result);
+
+              return result;
             }
 
             return note;
           })
         };
+      } else {
+        const note = {
+          ...form,
+          _id: `${notes.length + 1}`,
+          content,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          grid: {
+            x,
+            y,
+            w: 1,
+            h
+          }
+        };
+
+        // Save note to database
+        this.db.put(note);
+
+        result = {
+          notes: [...notes, note]
+        };
       }
 
-      return {
-        notes: [
-          ...notes,
-          {
-            ...form,
-            id: notes.length + 1,
-            content,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            grid: {
-              x,
-              y,
-              w: 1,
-              h
-            }
-          }
-        ]
-      };
-    });
+      return result;
+    }, this.loadAllNotes);
   }
 
   /**
@@ -182,7 +214,7 @@ class App extends Component {
         case "list":
           content = [
             {
-              id: null,
+              _id: null,
               label: "",
               isChecked: false,
               isNew: true
@@ -203,7 +235,7 @@ class App extends Component {
    * Edit an existing note
    *
    * @param {object} note - Note which want to be edited
-   * @param {number} note.id - Note's ID
+   * @param {string} note._id - Note's ID
    * @param {string} note.title - Note's title
    * @param {string} note.type - Note's type
    * @param {(string|object[])} note.content - Note's content based on it's type
@@ -238,19 +270,19 @@ class App extends Component {
    * Update a list item check
    *
    * @param {string} formName - Form's name in state
-   * @param {number} itemID - Selected item ID
-   * @param {number} [noteID=-1] - Selected note ID
+   * @param {string} itemID - Selected item ID
+   * @param {string} [noteID=-1] - Selected note ID
    * @memberof App
    */
-  updateListItemCheck(formName, itemID, noteID = -1) {
+  updateListItemCheck(formName, itemID, noteID = "-1") {
     this.setState(prevState => {
       const { notes } = prevState;
-      const isCheckInForm = noteID === -1;
+      const isCheckInForm = noteID === "-1";
 
       if (!isCheckInForm) {
         return {
           notes: notes.map(note => {
-            if (noteID === note.id) {
+            if (noteID === note._id) {
               return {
                 ...note,
                 content: checkListItem(note.content, itemID)
@@ -276,7 +308,7 @@ class App extends Component {
    *
    * @param {string} formName - Form's name in state
    * @param {string} label - New label
-   * @param {number} itemID - Selected item ID
+   * @param {string} itemID - Selected item ID
    * @memberof App
    */
   updateListItemLabel(formName, label, itemID) {
@@ -292,14 +324,14 @@ class App extends Component {
    * Delete a list item
    *
    * @param {string} formName - Form's name in state
-   * @param {number} itemID - Selected item ID
+   * @param {string} itemID - Selected item ID
    * @memberof App
    */
   deleteListItem(formName, itemID) {
     this.setState(prevState => ({
       [formName]: {
         ...prevState[formName],
-        content: prevState[formName].content.filter(item => itemID !== item.id)
+        content: prevState[formName].content.filter(item => itemID !== item._id)
       }
     }));
   }
@@ -308,14 +340,14 @@ class App extends Component {
    * Create new itemID
    *
    * @param {string} formName - Form's name in state
-   * @param {number} itemID - Selected item ID
+   * @param {string} itemID - Selected item ID
    * @param {number} itemIndex - Selected item index
    * @memberof App
    */
   createListItem(formName, itemID, itemIndex) {
     this.setState(prevState => {
       const { content } = prevState[formName];
-      const lastID = content.length;
+      const lastID = `${content.length}`;
       // Is cursor focus on last item created (above blank new item)
       const isLastItem = itemID === lastID;
       // Is cursor focus on blank new item (very bottom of the list)
@@ -323,7 +355,7 @@ class App extends Component {
       let newContent;
 
       const blankItem = {
-        id: null,
+        _id: null,
         label: "",
         isChecked: false,
         isNew: true
@@ -337,7 +369,7 @@ class App extends Component {
           // Show with checkbox instead of plus icon
           const newItem = {
             ...blankItem,
-            id: lastID,
+            _id: lastID,
             isNew: false
           };
           // Insert blank new item between created items
@@ -348,10 +380,10 @@ class App extends Component {
         // Instead of plus icon
         // Apply new item as created item
         const applyCreatedItem = item => {
-          if (itemID === item.id) {
+          if (itemID === item._id) {
             return {
               ...item,
-              id: lastID,
+              _id: lastID,
               isNew: false
             };
           }
@@ -375,13 +407,21 @@ class App extends Component {
   /**
    * Delete a note
    *
-   * @param {number} noteID - Selected note ID
+   * @param {string} noteID - Selected note ID
    * @memberof App
    */
-  deleteNote(noteID) {
-    this.setState(prevState => ({
-      notes: prevState.notes.filter(note => noteID !== note.id)
-    }));
+  async deleteNote(noteID) {
+    try {
+      // Delete note from Database
+      const note = await this.db.get(noteID);
+      await this.db.remove(note);
+
+      this.setState(prevState => ({
+        notes: prevState.notes.filter(note => noteID !== note._id)
+      }));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
@@ -457,15 +497,15 @@ class App extends Component {
           isResizable={false}
         >
           {notes.map(note => (
-            <div key={note.id} data-grid={note.grid}>
+            <div key={note._id} data-grid={note.grid}>
               <Note
                 title={note.title}
                 type={note.type}
                 content={note.content}
                 onChangeCheck={itemID =>
-                  this.updateListItemCheck("newNote", itemID, note.id)
+                  this.updateListItemCheck("newNote", itemID, note._id)
                 }
-                onClickClose={e => this.deleteNote(note.id)}
+                onClickClose={e => this.deleteNote(note._id)}
                 onClick={e => {
                   const { target } = e;
                   const isCheckBox = target.type === "checkbox";
