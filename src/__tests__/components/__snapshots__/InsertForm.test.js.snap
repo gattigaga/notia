@@ -19,29 +19,6 @@ exports[`InsertForm renders correctly 1`] = `
 </styled.div>
 `;
 
-exports[`InsertForm renders in edit mode 1`] = `
-<styled.div>
-  <InputTitle
-    onChange={[Function]}
-    onFocus={[Function]}
-    placeholder="Title"
-    rows={1}
-    value="Learn React"
-  />
-  <styled.p>
-    Edited at 
-    Monday, February 5, 2018 11:36 PM
-  </styled.p>
-  <styled.div>
-    <Button
-      onClick={[Function]}
-    >
-      DONE
-    </Button>
-  </styled.div>
-</styled.div>
-`;
-
 exports[`InsertForm renders with additional class 1`] = `
 <styled.div
   className="my-class"
